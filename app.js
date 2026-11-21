@@ -1,13 +1,17 @@
 // Pour ajouter une appli : crée apps/ton-appli.js puis ajoute 'ton-appli' ici.
 const APPS = ['explorer', 'browser', 'notepad', 'calculator', 'paint', 'recycle', 'settings', 'about'];
 
-const loadApp = n => new Promise(ok => {
+const tryLoad = src => new Promise(ok => {
   const s = document.createElement('script');
-  s.src = `apps/${n}.js`;
-  s.onload = ok;
-  s.onerror = () => { console.warn('Appli introuvable : apps/' + n + '.js'); ok(); };
+  s.src = src;
+  s.onload = () => ok(true);
+  s.onerror = () => { s.remove(); ok(false); };
   document.body.appendChild(s);
 });
+// cherche apps/nom.js, puis nom.js à la racine (au cas où le fichier n'est pas rangé dans apps/)
+const loadApp = async n => {
+  if (!(await tryLoad(`apps/${n}.js`)) && !(await tryLoad(`${n}.js`))) console.warn('Appli introuvable : ' + n + '.js (ni dans apps/, ni à la racine)');
+};
 
 (async () => {
   for (const n of APPS) await loadApp(n);
