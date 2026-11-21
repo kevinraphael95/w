@@ -4,7 +4,7 @@ OS.register({
     const SITES = [['📖', 'Wikipédia (FR)', 'https://fr.wikipedia.org'], ['📖', 'Wikipedia (EN)', 'https://en.wikipedia.org'],
       ['🧳', 'Wikivoyage', 'https://fr.wikivoyage.org'], ['🖼️', 'Wikimedia Commons', 'https://commons.wikimedia.org']];
     box.innerHTML = `<div class="bw-tabs"></div>
-      <div class="tb bw-bar"><button class="bk">←</button><button class="fw">→</button><button class="rl">⟳</button><button class="hm">🏠</button><input class="ad" placeholder="Rechercher ou saisir une adresse"><button class="ex" title="Ouvrir dans un vrai onglet">↗</button></div>
+      <div class="tb bw-bar"><button class="bk">←</button><button class="fw">→</button><button class="rl">⟳</button><button class="hm">🏠</button><input class="ad" placeholder="Rechercher ou saisir une adresse"><button class="px" title="Proxy (pour les sites qui bloquent l’affichage)">🛡️</button><button class="ex" title="Ouvrir dans un vrai onglet">↗</button></div>
       <div class="bw-v"></div>
       <div class="ex-st">Google, YouTube et beaucoup d’autres sites refusent de s’afficher ici : utilise ↗ pour les ouvrir dans un vrai onglet.</div>`;
     const $$ = s => box.querySelector(s), bar = $$('.bw-tabs'), v = $$('.bw-v'), ad = $$('.ad');
@@ -29,7 +29,12 @@ OS.register({
       tabs.forEach(t => { const u = t.h[t.i], on = t === cur; t.home.hidden = !(on && !u); t.frame.hidden = !(on && u); });
       ad.value = cur.h[cur.i]; $$('.bk').disabled = cur.i < 1; $$('.fw').disabled = cur.i >= cur.h.length - 1;
     };
-    const load = t => { const u = t.h[t.i]; if (u) t.frame.src = u; draw(); };
+    const proxy = () => st('sim-proxy', ''), useP = () => st('sim-proxyon', '') === '1';
+    const load = t => { const u = t.h[t.i]; if (u) t.frame.src = proxy() && useP() ? proxy() + '?url=' + encodeURIComponent(u) : u; draw(); };
+    const setP = () => {
+      const u = (prompt('Adresse de ton proxy (voir proxy/worker.js)', proxy()) || '').trim();
+      if (/^https:\/\//.test(u)) { sv('sim-proxy', u); sv('sim-proxyon', '1'); load(cur); }
+    };
     const go = s => { cur.h = cur.h.slice(0, cur.i + 1); cur.h.push(norm(s)); cur.i++; load(cur); };
     const close = t => {
       const k = tabs.indexOf(t); t.home.remove(); t.frame.remove(); tabs.splice(k, 1);
@@ -51,6 +56,10 @@ OS.register({
     $$('.fw').onclick = () => { if (cur.i < cur.h.length - 1) { cur.i++; load(cur); } };
     $$('.rl').onclick = () => load(cur);
     $$('.hm').onclick = () => go('');
+    $$('.px').onclick = e => {
+      const r = e.currentTarget.getBoundingClientRect();
+      OS.menu([[useP() ? 'Désactiver le proxy' : 'Activer le proxy', () => { if (!proxy()) return setP(); sv('sim-proxyon', useP() ? '0' : '1'); load(cur); }], ['Adresse du proxy…', setP]], r.left, r.bottom);
+    };
     $$('.ex').onclick = () => { const u = cur.h[cur.i]; if (u) window.open(u, '_blank', 'noopener'); };
     ad.onkeydown = e => { if (e.key === 'Enter') go(ad.value); };
     newTab();
