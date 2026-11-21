@@ -45,7 +45,7 @@ button{font:inherit}
 #ctx div{padding:8px 24px 8px 16px;cursor:default}
 #ctx div:hover{background:#ffffff26}
 /* fenêtres */
-.win{position:absolute;background:#fff;border:1px solid #0078d7;box-shadow:0 8px 28px #0006;display:flex;flex-direction:column;min-width:220px;min-height:120px}
+.win{position:absolute;background:#fff;border:1px solid #0078d7;box-shadow:0 8px 28px #0006;display:flex;flex-direction:column;min-width:220px;min-height:120px;overflow:hidden;resize:both;max-width:100%;max-height:100%}
 .win.max{inset:0 0 40px 0!important;width:auto!important;height:auto!important}
 .win.min{display:none}
 .bar{height:32px;display:flex;align-items:center;background:#fff;gap:8px;padding-left:8px;cursor:default}
@@ -77,3 +77,13 @@ button{font:inherit}
 .spin{width:34px;height:34px;margin-top:30px;border:4px solid #fff4;border-top-color:#fff;border-radius:50%;animation:r 1s linear infinite}
 @keyframes r{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.spin{animation:none}}
+
+/* barres d'outils, listes, réglages */
+.tb{display:flex;gap:6px;align-items:center;padding:4px 8px;border-bottom:1px solid #ddd;background:#f3f3f3;flex:none}
+.tb button{padding:3px 10px;border:1px solid #bbb;background:#fff;cursor:pointer}
+.tb button:hover{background:#e5f3ff;border-color:#0078d7}
+.tb span{margin-left:auto;color:#666;font-size:12px}
+.row{padding:6px 10px;border-bottom:1px solid #eee;cursor:default}
+.row:hover{background:#e5f3ff}
+.wp{width:72px;height:48px;border:2px solid #ccc;cursor:pointer}
+.wp.on{border-color:#0078d7}

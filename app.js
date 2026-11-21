@@ -1,33 +1,13 @@
-const GITHUB_USER = 'kevinraphael95';
-const GITHUB_REPO = 'w';
+// Pour ajouter une appli : crée apps/ton-appli.js puis ajoute 'ton-appli' ici.
+const APPS = ['documents', 'notepad', 'calculator', 'recycle', 'settings', 'about'];
 
-const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/apps`;
+const loadApp = n => new Promise(ok => {
+  const s = document.createElement('script');
+  s.src = `apps/${n}.js`;
+  s.onload = ok;
+  s.onerror = () => { console.warn('Appli introuvable : apps/' + n + '.js'); ok(); };
+  document.body.appendChild(s);
+});
 
-fetch(apiUrl)
-  .then(r => {
-    if (!r.ok) throw new Error("Erreur API");
-    return r.json();
-  })
-  .then(files => {
-    const appList = files
-      .filter(f => f.name.endsWith('.js'))
-      .map(f => 'apps/' + f.name);
-
-    appList.forEach(src => {
-      const script = document.createElement('script');
-      script.src = src;
-      document.body.appendChild(script);
-    });
-  })
-  .catch(() => {
-    console.warn("API GitHub inaccessible, chargement de secours.");
-    const fallback = [
-      'apps/notepad.js', 'apps/calculator.js', 'apps/settings.js',
-      'apps/about.js', 'apps/recycle.js', 'apps/documents.js', 'apps/browser.js'
-    ];
-    fallback.forEach(src => {
-      const script = document.createElement('script');
-      script.src = src;
-      document.body.appendChild(script);
-    });
-  });
+// on charge tout dans l'ordre, PUIS on démarre (avant : boot() partait trop tôt)
+(async () => { for (const n of APPS) await loadApp(n); OS.boot(); })();

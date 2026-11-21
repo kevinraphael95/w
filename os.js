@@ -9,17 +9,28 @@ const st = (k, d) => { try { return localStorage.getItem(k) || d; } catch (e) { 
 const sv = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
 
 OS.register = app => { OS.apps[app.id] = app; };
+// système de fichiers virtuel (localStorage) : f = documents, t = corbeille
+OS.fs = {
+  d: (() => { try { return JSON.parse(st('sim-fs', '')); } catch (e) {} })() || { f: { 'fichier1.txt': 'Bonjour !', 'fichier2.txt': '' }, t: {} },
+  save() { sv('sim-fs', JSON.stringify(this.d)); dispatchEvent(new Event('fs')); },
+  del(n) { this.d.t[n] = this.d.f[n]; delete this.d.f[n]; this.save(); },
+  restore(n) { let m = n; while (m in this.d.f) m = 'copie de ' + m; this.d.f[m] = this.d.t[n]; delete this.d.t[n]; this.save(); },
+  purge(n) { delete this.d.t[n]; this.save(); }
+};
+// appelle f() tout de suite puis à chaque changement de fichiers, tant que box est affichée
+OS.onFs = (box, f) => { const h = () => box.isConnected ? f() : removeEventListener('fs', h); addEventListener('fs', h); f(); };
 OS.user = () => st('sim-user', 'kévin');
 OS.setUser = n => sv('sim-user', n.trim() || 'kévin');
 OS.setWall = i => { sv('sim-wall', i); document.documentElement.style.setProperty('--wp', OS.walls[i][1]); };
 
-OS.open = id => {
+OS.open = (id, arg) => {
   const app = OS.apps[id]; if (!app) return;
-  if (OS.wins[id]) { OS.wins[id].el.classList.remove('min'); return OS.focus(id); }
+  const old = OS.wins[id];
+  if (old) { old.el.classList.remove('min'); OS.focus(id); if (arg !== undefined && old.onarg) old.onarg(arg); return; }
   const el = document.createElement('div');
   el.className = 'win';
-  const n = Object.keys(OS.wins).length;
-  Object.assign(el.style, { width: (app.w || 480) + 'px', height: (app.h || 340) + 'px', left: 80 + n * 28 + 'px', top: 40 + n * 28 + 'px' });
+  const n = Object.keys(OS.wins).length % 8;
+  Object.assign(el.style, { width: Math.min(app.w || 480, innerWidth - 16) + 'px', height: Math.min(app.h || 340, innerHeight - 56) + 'px', left: 80 + n * 28 + 'px', top: 40 + n * 28 + 'px' });
   el.innerHTML = `<div class="bar"><span>${app.icon}</span><b>${app.name}</b><button class="m">—</button><button class="z">▢</button><button class="x">✕</button></div><div class="body"></div>`;
   $('#desktop').appendChild(el);
   
@@ -28,7 +39,7 @@ OS.open = id => {
   
   const win = { id, el, task, close: () => OS.close(id) };
   OS.wins[id] = win;
-  app.render(el.querySelector('.body'), win);
+  app.render(el.querySelector('.body'), win, arg);
   el.addEventListener('pointerdown', () => OS.focus(id));
   el.querySelector('.x').onclick = win.close;
   el.querySelector('.m').onclick = () => { el.classList.add('min'); OS.focus(null); };
@@ -112,14 +123,9 @@ OS.boot = () => {
   OS.setWall(+st('sim-wall', 0));
   const start = $('#start');
   const toggle = v => { start.hidden = !(v ?? start.hidden); $('#startbtn').classList.toggle('on', !start.hidden); if (!start.hidden) $('#usr span').textContent = OS.user(); };
-  const icon = (ic, name, f) => { const d = document.createElement('div'); d.className = 'icon'; d.innerHTML = `<span>${ic}</span>${name}`; d.ondblclick = f; $('#desktop').appendChild(d); };
+  const icon = (ic, name, f) => { const d = document.createElement('div'); d.className = 'icon'; d.innerHTML = `<span>${ic}</span>${name}`; d.ondblclick = f; d.onclick = () => matchMedia('(pointer:coarse)').matches && f(); $('#desktop').appendChild(d); };
   
-  // ICÔNE CORBEILLE (affichée immédiatement)
-  icon('🗑️', 'Corbeille', () => OS.open('recycle'));
-  
-  // BOUCLE POUR LES AUTRES APPLIS (chargées dynamiquement)
   for (const a of Object.values(OS.apps)) {
-    if (a.id === 'recycle') continue; // On saute la corbeille car elle est déjà affichée
     icon(a.icon, a.name, () => OS.open(a.id));
     const t = document.createElement('div'); t.className = 'tile'; t.innerHTML = `<span>${a.icon}</span>${a.name}`;
     t.onclick = () => { OS.open(a.id); toggle(false); };
@@ -149,7 +155,10 @@ OS.boot = () => {
     OS.menu([['Actualiser', () => { const d = $('#desktop'); d.style.opacity = 0; setTimeout(() => d.style.opacity = 1, 90); }],
       ['Paramètres d’affichage', () => OS.open('settings')], ['Personnaliser', () => OS.open('settings')]], e.clientX, e.clientY);
   };
-  addEventListener('keydown', () => { if ($('#screen').className === 'lock') OS.screen('login'); });
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape') { $('#ctx').hidden = true; toggle(false); }
+    if ($('#screen').className === 'lock') OS.screen('login');
+  });
   OS.tick(); setInterval(OS.tick, 10000);
   OS.screen('boot');
 };
