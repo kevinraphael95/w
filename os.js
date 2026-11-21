@@ -22,7 +22,11 @@ OS.open = id => {
   Object.assign(el.style, { width: (app.w || 480) + 'px', height: (app.h || 340) + 'px', left: 80 + n * 28 + 'px', top: 40 + n * 28 + 'px' });
   el.innerHTML = `<div class="bar"><span>${app.icon}</span><b>${app.name}</b><button class="m">—</button><button class="z">▢</button><button class="x">✕</button></div><div class="body"></div>`;
   $('#desktop').appendChild(el);
-  const task = OS.tasks[id]; task.classList.add('open');
+  
+  // CORRECTION ICI : on vérifie si task existe avant de l'utiliser
+  const task = OS.tasks[id]; 
+  if (task) task.classList.add('open');
+  
   const win = { id, el, task, close: () => OS.close(id) };
   OS.wins[id] = win;
   app.render(el.querySelector('.body'), win);
@@ -46,11 +50,11 @@ OS.focus = id => {
   for (const k in OS.wins) {
     const on = k === id;
     OS.wins[k].el.classList.toggle('focus', on);
-    OS.tasks[k].classList.toggle('active', on);
+    if (OS.tasks[k]) OS.tasks[k].classList.toggle('active', on);
   }
   if (id) OS.wins[id].el.style.zIndex = ++OS.z;
 };
-OS.close = id => { const w = OS.wins[id]; if (!w) return; w.el.remove(); w.task.classList.remove('open', 'active'); delete OS.wins[id]; };
+OS.close = id => { const w = OS.wins[id]; if (!w) return; w.el.remove(); if (w.task) w.task.classList.remove('open', 'active'); delete OS.wins[id]; };
 OS.closeAll = () => Object.keys(OS.wins).forEach(OS.close);
 
 // menu contextuel générique : items = [[label, fonction], ...] ; up = s'ouvre vers le haut
@@ -111,8 +115,7 @@ OS.boot = () => {
   const toggle = v => { start.hidden = !(v ?? start.hidden); $('#startbtn').classList.toggle('on', !start.hidden); if (!start.hidden) $('#usr span').textContent = OS.user(); };
   const icon = (ic, name, f) => { const d = document.createElement('div'); d.className = 'icon'; d.innerHTML = `<span>${ic}</span>${name}`; d.ondblclick = f; $('#desktop').appendChild(d); };
   
-  // ICÔNE CORBEILLE
-  icon('🗑️', 'Corbeille', () => OS.open('recycle'));
+  // SUPPRIMÉ : la ligne icon('🗑️', 'Corbeille', ...) car elle est déjà chargée par la boucle ci-dessous
   
   for (const a of Object.values(OS.apps)) {
     icon(a.icon, a.name, () => OS.open(a.id));
