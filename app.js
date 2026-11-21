@@ -1,4 +1,3 @@
-// Infos de ton dépôt GitHub
 const GITHUB_USER = 'kevinraphael95';
 const GITHUB_REPO = 'w';
 
@@ -10,12 +9,10 @@ fetch(apiUrl)
     return r.json();
   })
   .then(files => {
-    // On garde seulement les fichiers .js
     const appList = files
       .filter(f => f.name.endsWith('.js'))
       .map(f => 'apps/' + f.name);
 
-    // On charge tout automatiquement
     appList.forEach(src => {
       const script = document.createElement('script');
       script.src = src;
@@ -23,7 +20,6 @@ fetch(apiUrl)
     });
   })
   .catch(() => {
-    // Solution de secours si l'API ne répond pas (ex: en local)
     console.warn("API GitHub inaccessible, chargement de secours.");
     const fallback = [
       'apps/notepad.js', 'apps/calculator.js', 'apps/settings.js',
