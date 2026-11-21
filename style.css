@@ -136,3 +136,19 @@ button{font:inherit}
 .pt-w{flex:1;overflow:auto;background:#c8d4e4;padding:8px;min-height:0}
 .pt-w canvas{display:block;background:#fff;box-shadow:2px 2px 6px #0004;cursor:crosshair;touch-action:none}
 .pt-s{display:flex;gap:30px}
+/* navigateur */
+.bw-tabs{display:flex;gap:2px;padding:6px 6px 0;background:#dfe6ee;flex:none;overflow:hidden}
+.bw-t{display:flex;gap:8px;align-items:center;padding:6px 10px;background:#c9d3de;min-width:110px;max-width:180px;font-size:12px;white-space:nowrap;cursor:default;border-radius:6px 6px 0 0}
+.bw-t.on{background:#fff}
+.bw-t b{margin-left:auto;font-weight:400;padding:0 4px}
+.bw-t b:hover{background:#e81123;color:#fff}
+.bw-p{border:0;background:none;font-size:18px;cursor:pointer;padding:0 10px}
+.bw-bar .ad{flex:1;padding:4px 12px;border:1px solid #bbb;border-radius:14px}
+.bw-bar button:disabled{opacity:.4;cursor:default}
+.bw-v{flex:1;position:relative;min-height:0}
+.bw-v iframe,.bw-home{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
+.bw-home{display:flex;flex-direction:column;align-items:center;padding:40px 20px;gap:16px;overflow:auto}
+.bw-home h2{margin:0;font-weight:300;font-size:32px}
+.bw-home input{width:min(520px,90%);padding:10px 16px;border:1px solid #bbb;border-radius:20px;font-size:15px}
+.bw-g{display:grid;grid-template-columns:repeat(auto-fill,200px);gap:8px;justify-content:center}
+.bw-v [hidden]{display:none!important}
