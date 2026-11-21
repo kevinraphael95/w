@@ -4,7 +4,7 @@ OS.register({
     box.innerHTML = '<div class="tb"><button class="n">Nouveau</button><button class="s">Enregistrer sous…</button><span class="f"></span></div><textarea style="flex:1;border:0;outline:0;resize:none;padding:8px;font:14px Consolas,monospace"></textarea>';
     const t = box.querySelector('textarea'), f = box.querySelector('.f');
     let cur = null;
-    const load = n => { cur = n; t.value = n ? OS.fs.d.f[n] ?? '' : st('sim-notepad', ''); f.textContent = n || 'Sans titre'; };
+    const load = n => { cur = n; if (n) OS.fs.touch(n); t.value = n ? OS.fs.d.f[n] ?? '' : st('sim-notepad', ''); f.textContent = n || 'Sans titre'; };
     const neu = () => { cur = null; t.value = ''; sv('sim-notepad', ''); f.textContent = 'Sans titre'; };
     win.onarg = n => n ? load(n) : neu();   // appelé par OS.open('notepad', 'fichier.txt')
     arg ? load(arg) : arg === '' ? neu() : load(null);
