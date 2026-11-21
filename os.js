@@ -15,8 +15,18 @@ OS.fs = {
   save() { sv('sim-fs', JSON.stringify(this.d)); dispatchEvent(new Event('fs')); },
   del(n) { this.d.t[n] = this.d.f[n]; delete this.d.f[n]; this.save(); },
   restore(n) { let m = n; while (m in this.d.f) m = 'copie de ' + m; this.d.f[m] = this.d.t[n]; delete this.d.t[n]; this.save(); },
-  purge(n) { delete this.d.t[n]; this.save(); }
+  purge(n) { delete this.d.t[n]; this.save(); },
+  touch(n) { const r = (this.d.r || []).filter(x => x !== n); r.unshift(n); this.d.r = r.slice(0, 20); sv('sim-fs', JSON.stringify(this.d)); }
 };
+// sauvegarde / chargement de tous les réglages dans un fichier settings.json
+OS.keys = ['sim-user', 'sim-wall', 'sim-icons', 'sim-fs', 'sim-notepad'];
+OS.exportCfg = () => {
+  const o = {}; OS.keys.forEach(k => { try { const v = localStorage.getItem(k); if (v !== null) o[k] = v; } catch (e) {} });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(o, null, 2)], { type: 'application/json' }));
+  a.download = 'settings.json'; a.click();
+};
+OS.importCfg = (o, reload = true) => { OS.keys.forEach(k => typeof o[k] === 'string' && sv(k, o[k])); if (reload) location.reload(); };
 // appelle f() tout de suite puis à chaque changement de fichiers, tant que box est affichée
 OS.onFs = (box, f) => { const h = () => box.isConnected ? f() : removeEventListener('fs', h); addEventListener('fs', h); f(); };
 OS.user = () => st('sim-user', 'kévin');
@@ -123,10 +133,41 @@ OS.boot = () => {
   OS.setWall(+st('sim-wall', 0));
   const start = $('#start');
   const toggle = v => { start.hidden = !(v ?? start.hidden); $('#startbtn').classList.toggle('on', !start.hidden); if (!start.hidden) $('#usr span').textContent = OS.user(); };
-  const icon = (ic, name, f) => { const d = document.createElement('div'); d.className = 'icon'; d.innerHTML = `<span>${ic}</span>${name}`; d.ondblclick = f; d.onclick = () => matchMedia('(pointer:coarse)').matches && f(); $('#desktop').appendChild(d); };
+  let pos = {}; try { pos = JSON.parse(st('sim-icons', '{}')); } catch (e) {}
+  let idx = 0;
+  // icônes de bureau déplaçables (alignées sur une grille, positions sauvegardées)
+  const icon = (id, ic, name, f) => {
+    const d = document.createElement('div'); d.className = 'icon'; d.innerHTML = `<span>${ic}</span>${name}`;
+    const rows = Math.max(1, Math.floor((innerHeight - 56) / 94)), i = idx++;
+    const p = pos[id] || [8 + Math.floor(i / rows) * 86, 8 + (i % rows) * 94];
+    d.style.left = p[0] + 'px'; d.style.top = p[1] + 'px';
+    d.ondblclick = f;
+    let moved = false;
+    d.onpointerdown = e => {
+      if (e.button) return;
+      moved = false;
+      const ox = e.clientX - d.offsetLeft, oy = e.clientY - d.offsetTop, sx = e.clientX, sy = e.clientY;
+      d.setPointerCapture(e.pointerId);
+      d.onpointermove = m => {
+        if (!moved && Math.hypot(m.clientX - sx, m.clientY - sy) < 5) return;
+        moved = true; d.classList.add('drag');
+        d.style.left = m.clientX - ox + 'px'; d.style.top = m.clientY - oy + 'px';
+      };
+      d.onpointerup = () => {
+        d.onpointermove = d.onpointerup = null; d.classList.remove('drag');
+        if (!moved) return;
+        const x = Math.max(0, Math.min(innerWidth - 84, Math.round((d.offsetLeft - 8) / 86) * 86 + 8));
+        const y = Math.max(0, Math.min(innerHeight - 132, Math.round((d.offsetTop - 8) / 94) * 94 + 8));
+        d.style.left = x + 'px'; d.style.top = y + 'px';
+        pos[id] = [x, y]; sv('sim-icons', JSON.stringify(pos));
+      };
+    };
+    d.onclick = () => { if (!moved && matchMedia('(pointer:coarse)').matches) f(); };
+    $('#desktop').appendChild(d);
+  };
   
   for (const a of Object.values(OS.apps)) {
-    icon(a.icon, a.name, () => OS.open(a.id));
+    icon(a.id, a.icon, a.name, () => OS.open(a.id));
     const t = document.createElement('div'); t.className = 'tile'; t.innerHTML = `<span>${a.icon}</span>${a.name}`;
     t.onclick = () => { OS.open(a.id); toggle(false); };
     $('#tiles .grid').appendChild(t);

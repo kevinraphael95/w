@@ -87,3 +87,40 @@ button{font:inherit}
 .row:hover{background:#e5f3ff}
 .wp{width:72px;height:48px;border:2px solid #ccc;cursor:pointer}
 .wp.on{border-color:#0078d7}
+
+/* icônes déplaçables */
+#desktop{display:block}
+.icon{position:absolute;width:84px;touch-action:none}
+.icon.drag{opacity:.7;z-index:5}
+/* explorateur */
+.ex-tabs{display:flex;gap:6px;padding:0 8px;font-size:12px;border-bottom:1px solid #ddd;flex:none}
+.ex-tabs *{padding:6px 12px;font-weight:400}
+.ex-tabs b{background:#0078d7;color:#fff}
+.ex-addr .path{flex:1;border:1px solid #bbb;background:#fff;padding:3px 8px}
+.ex-addr input{width:160px;padding:3px 6px;border:1px solid #bbb}
+.ex-addr button:disabled{opacity:.4;cursor:default}
+.ex-main{flex:1;display:flex;min-height:0}
+.ex-main nav{width:170px;overflow:auto;padding:6px 0;border-right:1px solid #eee;flex:none}
+.nv{padding:5px 12px;cursor:default;white-space:nowrap}
+.nv.sub{padding-left:28px}.nv:hover{background:#e5f3ff}.nv.on{background:#cce8ff}
+.ex-main section{flex:1;overflow:auto;padding:8px 14px}
+.ex-h{color:#0050a0;margin:8px 0;border-bottom:1px solid #ddd;padding-bottom:3px}
+.ex-g{display:grid;grid-template-columns:repeat(auto-fill,170px);gap:6px}
+.ex-t{display:flex;gap:8px;padding:6px;align-items:center;cursor:default}
+.ex-t:hover{background:#e5f3ff}.ex-t i{font-style:normal;font-size:32px}.ex-t small{color:#777}
+.ex-f{display:flex}.ex-w{margin-left:auto;width:45%;color:#666}
+.ex-e{color:#999;text-align:center;margin-top:30px}
+.ex-st{flex:none;padding:3px 10px;font-size:12px;color:#444;border-top:1px solid #eee}
+/* paramètres */
+.st-top{display:flex;align-items:center;gap:16px;padding:20px 40px;background:#f2f2f2;flex:none}
+.st-top h2{margin:0;font-weight:600}
+.st-av{width:72px;height:72px;border-radius:50%;background:#d9a600;color:#fff;display:grid;place-items:center;font-size:34px}
+.st-s{padding:14px;text-align:center;flex:none}
+.st-s input{width:60%;min-width:180px;padding:6px 10px;border:2px solid #888;font-size:14px}
+.st-g{display:grid;grid-template-columns:repeat(auto-fill,210px);gap:6px 10px;padding:6px 24px;justify-content:center}
+.st-t{display:flex;gap:12px;padding:10px;cursor:default}
+.st-t:hover{background:#e5f3ff}.st-t i{font-style:normal;font-size:28px}.st-t small{color:#555}
+.st-p{padding:16px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.st-p input{padding:6px;border:1px solid #888}
+.st-p button{padding:6px 12px;cursor:pointer}
+.st-p .sw{display:flex;gap:8px;flex-wrap:wrap}
