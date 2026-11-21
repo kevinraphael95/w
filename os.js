@@ -23,7 +23,6 @@ OS.open = id => {
   el.innerHTML = `<div class="bar"><span>${app.icon}</span><b>${app.name}</b><button class="m">—</button><button class="z">▢</button><button class="x">✕</button></div><div class="body"></div>`;
   $('#desktop').appendChild(el);
   
-  // CORRECTION ICI : on vérifie si task existe avant de l'utiliser
   const task = OS.tasks[id]; 
   if (task) task.classList.add('open');
   
@@ -115,9 +114,12 @@ OS.boot = () => {
   const toggle = v => { start.hidden = !(v ?? start.hidden); $('#startbtn').classList.toggle('on', !start.hidden); if (!start.hidden) $('#usr span').textContent = OS.user(); };
   const icon = (ic, name, f) => { const d = document.createElement('div'); d.className = 'icon'; d.innerHTML = `<span>${ic}</span>${name}`; d.ondblclick = f; $('#desktop').appendChild(d); };
   
-  // SUPPRIMÉ : la ligne icon('🗑️', 'Corbeille', ...) car elle est déjà chargée par la boucle ci-dessous
+  // ICÔNE CORBEILLE (affichée immédiatement)
+  icon('🗑️', 'Corbeille', () => OS.open('recycle'));
   
+  // BOUCLE POUR LES AUTRES APPLIS (chargées dynamiquement)
   for (const a of Object.values(OS.apps)) {
+    if (a.id === 'recycle') continue; // On saute la corbeille car elle est déjà affichée
     icon(a.icon, a.name, () => OS.open(a.id));
     const t = document.createElement('div'); t.className = 'tile'; t.innerHTML = `<span>${a.icon}</span>${a.name}`;
     t.onclick = () => { OS.open(a.id); toggle(false); };
