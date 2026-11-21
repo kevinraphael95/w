@@ -1,5 +1,5 @@
 // Pour ajouter une appli : crée apps/ton-appli.js puis ajoute 'ton-appli' ici.
-const APPS = ['explorer', 'notepad', 'calculator', 'paint', 'recycle', 'settings', 'about'];
+const APPS = ['explorer', 'browser', 'notepad', 'calculator', 'paint', 'recycle', 'settings', 'about'];
 
 const loadApp = n => new Promise(ok => {
   const s = document.createElement('script');
