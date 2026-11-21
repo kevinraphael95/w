@@ -34,11 +34,10 @@
 <div id="screen" hidden></div>
 
 <script src="os.js"></script>
-<!-- AJOUTER UNE APPLI : crée apps/monappli.js puis ajoute une ligne ici -->
-<script src="apps/notepad.js"></script>
-<script src="apps/calculator.js"></script>
-<script src="apps/settings.js"></script>
-<script src="apps/about.js"></script>
-<script>OS.boot();</script>
+<script src="apps.js"></script>
+<script>
+  // On attend un peu que les applis soient chargées avant de démarrer l'OS
+  setTimeout(() => OS.boot(), 100);
+</script>
 </body>
 </html>
