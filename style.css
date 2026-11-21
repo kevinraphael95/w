@@ -1,0 +1,79 @@
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;font:14px "Segoe UI",system-ui,sans-serif;user-select:none}
+body{background:var(--wp) center/cover}
+button{font:inherit}
+#desktop{position:absolute;inset:0 0 40px 0;display:grid;grid-template-columns:repeat(auto-fill,84px);grid-template-rows:repeat(auto-fill,92px);grid-auto-flow:column;padding:8px;gap:2px;align-content:start}
+.icon{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;color:#fff;text-align:center;font-size:12px;text-shadow:0 1px 3px #000;border:1px solid transparent;cursor:default;height:92px}
+.icon:hover{background:#fff2;border-color:#fff4}
+.icon span{font-size:34px;line-height:1.1}
+/* barre des tâches */
+#taskbar{position:absolute;left:0;right:0;bottom:0;height:40px;background:#101010eb;display:flex;align-items:stretch;color:#fff;z-index:9999}
+#startbtn{width:48px;border:0;background:none;display:grid;grid-template-columns:repeat(2,9px);gap:2px;place-content:center;cursor:pointer}
+#startbtn i{height:9px;background:#fff}
+#startbtn:hover,#startbtn.on{background:#333}
+#startbtn:hover i,#startbtn.on i{background:#76b9ed}
+#search{width:300px;margin:0;padding:0 14px;display:flex;align-items:center;background:#f2f2f2;color:#444;cursor:text;font-size:13px}
+#tasks{flex:1;display:flex}
+.task{width:48px;border:0;border-bottom:2px solid transparent;background:none;color:#fff;font-size:20px;cursor:pointer}
+.task:hover{background:#333}
+.task.open{border-bottom-color:#76b9ed;background:#222}
+.task.active{background:#444}
+#tray{display:flex;align-items:center;gap:12px;padding:0 10px;font-size:12px}
+#clock{padding:0 10px;display:flex;align-items:center;font-size:12px;text-align:center}
+#notif{width:44px;display:grid;place-items:center}
+#clock:hover,#notif:hover{background:#333}
+@media(max-width:760px){#search{display:none}#tray{display:none}}
+/* menu démarrer */
+#start{position:absolute;left:0;bottom:40px;height:min(560px,calc(100% - 40px));display:flex;background:#1c1c1cf5;backdrop-filter:blur(20px);color:#fff;z-index:9998}
+#start[hidden],#ctx[hidden],#screen[hidden]{display:none}
+#rail{width:48px;display:flex;flex-direction:column;background:#0008}
+#start.wide #rail{width:256px;background:#252525}
+#rail button{height:48px;display:flex;align-items:center;border:0;background:none;color:#fff;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden}
+#rail button:hover{background:#ffffff1f}
+#rail i{font-style:normal;width:48px;flex:none;text-align:center;font-size:17px}
+#rail span{display:none}
+#start.wide #rail span{display:inline}
+#rail .sp{flex:1}
+#tiles{width:336px;padding:14px 12px;overflow:auto}
+#tiles h4{margin:0 0 10px;font-weight:400;color:#ccc}
+#tiles .grid{display:grid;grid-template-columns:repeat(3,100px);gap:4px}
+.tile{height:100px;padding:8px;background:#ffffff1f;border:2px solid transparent;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;font-size:12px}
+.tile:hover{border-color:#fff8}
+.tile span{font-size:34px}
+/* menu contextuel / alimentation */
+#ctx{position:fixed;z-index:10000;min-width:200px;background:#2b2b2b;color:#fff;border:1px solid #555;padding:2px 0;box-shadow:0 4px 16px #0008}
+#ctx div{padding:8px 24px 8px 16px;cursor:default}
+#ctx div:hover{background:#ffffff26}
+/* fenêtres */
+.win{position:absolute;background:#fff;border:1px solid #0078d7;box-shadow:0 8px 28px #0006;display:flex;flex-direction:column;min-width:220px;min-height:120px}
+.win.max{inset:0 0 40px 0!important;width:auto!important;height:auto!important}
+.win.min{display:none}
+.bar{height:32px;display:flex;align-items:center;background:#fff;gap:8px;padding-left:8px;cursor:default}
+.win:not(.focus) .bar{color:#777}
+.bar b{flex:1;font-weight:400;overflow:hidden;white-space:nowrap}
+.bar button{width:46px;height:100%;border:0;background:none;font-size:13px;cursor:default}
+.bar button:hover{background:#e5e5e5}
+.bar button.x:hover{background:#e81123;color:#fff}
+.body{flex:1;overflow:auto;user-select:text;display:flex;flex-direction:column;min-height:0}
+/* écrans : verrouillage, connexion, arrêt */
+#screen{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;background:var(--wp) center/cover;cursor:default}
+#screen.lock{align-items:flex-start;justify-content:flex-end;padding:0 6vw 12vh}
+.lt{display:flex;flex-direction:column;text-shadow:0 1px 8px #0006}
+.lt b{font-size:min(16vw,120px);font-weight:200;line-height:1}
+.lt span{font-size:min(5vw,34px);font-weight:300}
+#screen.login{background:linear-gradient(#0007,#0007),var(--wp) center/cover}
+.av{width:180px;height:180px;border-radius:50%;background:#5b6b7b;display:grid;place-items:center;font-size:90px;margin-bottom:14px}
+#screen h2{font-weight:300;font-size:30px;margin:0}
+#screen form{display:flex;margin-top:16px}
+#screen input{width:240px;padding:8px 10px;border:2px solid #fffa;background:#fff3;color:#fff;font-size:15px;outline:0}
+#screen input::placeholder{color:#fffc}
+#screen form button{width:38px;border:0;background:#fff3;color:#fff;font-size:18px;cursor:pointer}
+.pwr{position:absolute;right:28px;bottom:24px;background:none;border:0;color:#fff;font-size:26px;cursor:pointer}
+#screen.wait{background:#0063b1}
+#screen.boot,#screen.off,#screen.sleep{background:#000}
+#screen small{opacity:.35}
+.logo{display:grid;grid-template-columns:repeat(2,56px);gap:5px}
+.logo i{height:56px;background:#1ba1e2}
+.spin{width:34px;height:34px;margin-top:30px;border:4px solid #fff4;border-top-color:#fff;border-radius:50%;animation:r 1s linear infinite}
+@keyframes r{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.spin{animation:none}}

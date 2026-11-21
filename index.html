@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Win10 Sim</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="desktop"></div>
+
+<div id="start" hidden>
+  <div id="rail">
+    <button id="hb"><i>☰</i><span><b>DÉMARRER</b></span></button>
+    <div class="sp"></div>
+    <button id="usr"><i>👤</i><span></span></button>
+    <button id="set"><i>⚙</i><span>Paramètres</span></button>
+    <button id="pwb"><i>⏻</i><span>Marche/Arrêt</span></button>
+  </div>
+  <div id="tiles"><h4>Applications</h4><div class="grid"></div></div>
+</div>
+
+<div id="ctx" hidden></div>
+
+<div id="taskbar">
+  <button id="startbtn" title="Démarrer"><i></i><i></i><i></i><i></i></button>
+  <div id="search">🔍&nbsp; Taper ici pour rechercher</div>
+  <div id="tasks"></div>
+  <div id="tray"><span>⌃</span><span>🔊</span><span>FRA</span></div>
+  <div id="clock"></div>
+  <div id="notif">💬</div>
+</div>
+
+<div id="screen" hidden></div>
+
+<script src="os.js"></script>
+<!-- AJOUTER UNE APPLI : crée apps/monappli.js puis ajoute une ligne ici -->
+<script src="apps/notepad.js"></script>
+<script src="apps/calculator.js"></script>
+<script src="apps/settings.js"></script>
+<script src="apps/about.js"></script>
+<script>OS.boot();</script>
+</body>
+</html>
