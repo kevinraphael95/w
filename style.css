@@ -124,3 +124,15 @@ button{font:inherit}
 .st-p input{padding:6px;border:1px solid #888}
 .st-p button{padding:6px 12px;cursor:pointer}
 .st-p .sw{display:flex;gap:8px;flex-wrap:wrap}
+/* paint */
+.pt-rb{flex-wrap:wrap;gap:8px;padding:6px 8px}
+.pt-rb .tl{display:flex;gap:2px}
+.pt-rb .tl button{font-size:16px;padding:2px 8px}
+.tb button.on{background:#cce8ff;border-color:#0078d7}
+.pt-sep{width:1px;align-self:stretch;background:#ccc}
+.pt-c{width:30px;height:30px;border:2px solid #0078d7;box-shadow:inset 0 0 0 2px #fff}
+.pt-pal{display:grid;grid-template-columns:repeat(10,20px);gap:2px}
+.pt-pal div{width:20px;height:20px;border:1px solid #888;cursor:pointer}
+.pt-w{flex:1;overflow:auto;background:#c8d4e4;padding:8px;min-height:0}
+.pt-w canvas{display:block;background:#fff;box-shadow:2px 2px 6px #0004;cursor:crosshair;touch-action:none}
+.pt-s{display:flex;gap:30px}
