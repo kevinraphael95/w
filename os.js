@@ -110,7 +110,10 @@ OS.boot = () => {
   const start = $('#start');
   const toggle = v => { start.hidden = !(v ?? start.hidden); $('#startbtn').classList.toggle('on', !start.hidden); if (!start.hidden) $('#usr span').textContent = OS.user(); };
   const icon = (ic, name, f) => { const d = document.createElement('div'); d.className = 'icon'; d.innerHTML = `<span>${ic}</span>${name}`; d.ondblclick = f; $('#desktop').appendChild(d); };
-  icon('🗑️', 'Corbeille', () => {});
+  
+  // ICÔNE CORBEILLE
+  icon('🗑️', 'Corbeille', () => OS.open('recycle'));
+  
   for (const a of Object.values(OS.apps)) {
     icon(a.icon, a.name, () => OS.open(a.id));
     const t = document.createElement('div'); t.className = 'tile'; t.innerHTML = `<span>${a.icon}</span>${a.name}`;
